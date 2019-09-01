@@ -1,19 +1,33 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h> 
-#include <libelf.h>
-#include <gelf.h>
-#include <fenv.h>
-#include <limits.h>
-
-using namespace std;
+#include "header.h"
+#include "reader.h"
+#include "memory.h"
+#include "decode.h"
 
 class Simulator{
     private:
+        char* elfBinary;
         void resetSimulator();
+        Reader *r;
+        Memory *mem;
+        Decode *d;
+    public:
+        Simulator(char*);
+        void startSimulation();
 
 };
+
+
+/*
+void resetSimulator()
+{
+	sparcRegisters.psr.cwp = 0;
+	sparcRegisters.psr.c = 0;
+	sparcRegisters.psr.v = 0;
+	sparcRegisters.psr.z = 0;
+	sparcRegisters.psr.n = 0;
+	sparcRegisters.pc = 0;
+	sparcRegisters.npc = 4;
+        
+     //   setIUErrorMode(0);
+}*/
+

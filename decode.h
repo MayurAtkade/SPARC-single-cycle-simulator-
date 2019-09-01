@@ -1,3 +1,5 @@
+#include "header.h"
+
 struct instruction_fields{
     unsigned short op, op2, op3, opf;
 };

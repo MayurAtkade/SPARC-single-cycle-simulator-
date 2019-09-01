@@ -1,0 +1,8 @@
+g++ -c memory.c -o memory.o 
+g++ -c loader.c -o loader.o 
+g++ -c decode.c -o decode.o 
+gcc -c simulator.c -o simulator.o 
+
+gcc loader.o memory.o decode.o register.o simulator.o -o sim 
+
+rm -f *.o

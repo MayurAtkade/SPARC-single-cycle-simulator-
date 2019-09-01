@@ -1,3 +1,5 @@
+#include "header.h"
+
 struct loadedSections
 {
 	char sectionName[15];
