@@ -1,4 +1,5 @@
 #include "header.h"
+#include "constants.h"
 struct processor_status_register
 {
 	unsigned int cwp:5;

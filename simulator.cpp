@@ -1,5 +1,4 @@
 #include "simulator.h"
-#include "other.h"
 
 Simulator::Simulator(char* f){
     elfBinary = f;

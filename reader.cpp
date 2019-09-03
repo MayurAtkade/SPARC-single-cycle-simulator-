@@ -81,10 +81,10 @@ struct loadedSections* Reader::load_sparc_instructions(char *elfBinary, Memory *
 					break;
 				while (sectionDataBuffer < (char*)sectionData-> d_buf + sectionData -> d_size )
 				{
-					memory.writeToMemory(*sectionDataBuffer); sectionLoadAddress++; sectionDataBuffer++;
-					memory.writeToMemory(*sectionDataBuffer); sectionLoadAddress++; sectionDataBuffer++;
-					memory.writeToMemory(*sectionDataBuffer); sectionLoadAddress++; sectionDataBuffer++;
-					memory.writeToMemory(*sectionDataBuffer); sectionLoadAddress++; sectionDataBuffer++;
+					memory->writeToMemory(*sectionDataBuffer); sectionLoadAddress++; sectionDataBuffer++;
+					memory->writeToMemory(*sectionDataBuffer); sectionLoadAddress++; sectionDataBuffer++;
+					memory->writeToMemory(*sectionDataBuffer); sectionLoadAddress++; sectionDataBuffer++;
+					memory->writeToMemory(*sectionDataBuffer); sectionLoadAddress++; sectionDataBuffer++;
 
 					sectionDataByteCounter += 4;
 					instructionCount++;

@@ -58,7 +58,7 @@ char* Decode::decodeInstruction(char* cpuInstruction, unsigned long regPC)
                 sprintf(hexNumber, "%lX", (imm22 << 10));
                 strcat(disassembledInstruction, hexNumber);
                 strcat(disassembledInstruction, "), ");
-                strcat(disassembledInstruction, getIntegerRegisterName(rd));
+              //  strcat(disassembledInstruction, getIntegerRegisterName(rd));
             }
         }
         
@@ -660,4 +660,167 @@ char* Decode::decodeInstruction(char* cpuInstruction, unsigned long regPC)
     if(wrong_instruction==1) return "-1";
 	else return disassembledInstruction;
 }
+
+
+/*
+ * Returns the mnemonic name of an Integer register as string
+ * (e.g. %g6, %l7) taking 'registerIdentifier' (e.g. 6, 7) as argument.
+ * Translation is done according to the specification given in
+ * Chapter - 4 (Registers) of SPARC v8 manual.
+ * 
+ * in[0] - in[7]         => r[24] - r[31]
+ * local[0] - local[7]   => r[16] - r[23]
+ * out[0] - out[7]       => r[8] - r[15]
+ * global[0] - global[7] => r[0] - r[7]
+ */
+char* Decode::getIntegerRegisterName(unsigned long registerIdentifier)
+{
+	char* registerName = (char*) malloc(4);
+	char* registerIndex = (char*)malloc(2);
+	
+	if((registerIdentifier >= 0) && (registerIdentifier <=7))
+		strcpy(registerName, "%g");
+	else
+		if((registerIdentifier >= 8) && (registerIdentifier <=15))
+			strcpy(registerName, "%o");
+		else
+			if((registerIdentifier >= 16) && (registerIdentifier <=23))
+				strcpy(registerName, "%l");
+			else
+				strcpy(registerName, "%i");
+	
+	sprintf(registerIndex, "%ld", (registerIdentifier % 8));
+	strcat(registerName, registerIndex);
+	
+	free(registerIndex);
+	return registerName;
+}
+
+
+
+/*
+ * Returns the mnemonic name of a Floating-point register as string
+ * (e.g. %f31) taking 'registerIdentifier' (e.g. 31) as argument.
+ */
+char* Decode::getFloatingRegisterName(unsigned long registerIdentifier)
+{
+	char* registerName = (char*) malloc(4);
+	char* registerIndex = (char*)malloc(3);
+	
+	strcpy(registerName, "%f");
+	sprintf(registerIndex, "%ld", registerIdentifier);
+	strcat(registerName, registerIndex);
+	
+	free(registerIndex);
+	return registerName;
+}
+
+
+
+/*
+ * Returns the mnemonic name of a Co-Processor register as string
+ * (e.g. %f31) taking 'registerIdentifier' (e.g. 31) as argument.
+ */
+char* Decode::getCoProcessorRegisterName(unsigned long registerIdentifier)
+{
+	char* registerName = (char*) malloc(4);
+	char* registerIndex = (char*)malloc(3);
+	
+	strcpy(registerName, "%f");
+	sprintf(registerIndex, "%ld", registerIdentifier);
+	strcat(registerName, registerIndex);
+	
+	free(registerIndex);
+	return registerName;
+}
+
+
+/*
+ * Translates the effective address for LOAD/STORE instructions
+ * and returns the translated address as a string,
+ * e.g. '%g3 + 0x25' or '%l2 + %l3'.
+ * 
+ * The effective address for a load/store instruction is 
+ * r[rs1] + r[rs2], if i = 0, or r[rs1] + sign_ext(simm13), if i = 1.
+ * The 'i' bit selects the second ALU operand for (integer) arithmetic and
+ * load/store instructions. If i = 0, the operand is r[rs2]. If i = 1, 
+ * the operand is 'simm13', sign-extended from 13 to 32 bits.
+ */
+char* Decode::getAddress(unsigned long rs1, unsigned long rs2, unsigned long i, unsigned long simm13, int registerTypeIdentifier)
+{
+	char* address = (char*)malloc(30);
+	char* hexNumber = (char*)malloc(32);
+	address[0] = '\0';
+	
+
+        // Integer, Floating-point or Co-Processor register?
+        switch(registerTypeIdentifier)
+        {
+                case 1: strcat(address, getIntegerRegisterName(rs1)); break;           // Integer register.
+                case 2: strcat(address, getFloatingRegisterName(rs1)); break;          // Floating point register.
+                case 3: strcat(address, getCoProcessorRegisterName(rs1)); break;       // Co-Processor register.
+        }
+
+        // Second operand is rs2.
+	if(i == 0) 
+	{
+            strcat(address, " + ");
+            switch(registerTypeIdentifier)
+            {
+                    case 1: strcat(address, getIntegerRegisterName(rs2)); break;            // Integer register.
+                    case 2: strcat(address, getFloatingRegisterName(rs2)); break;           // Floating point register.
+                    case 3: strcat(address, getCoProcessorRegisterName(rs2)); break;        // Co-Processor register.
+            }
+
+	}
+        
+        // Second operand is simm13.
+	else
+	{
+		strcat(address, " + ");
+		sprintf(hexNumber, "0x%lX", simm13);
+		strcat(address, hexNumber);
+	}
+	
+	free(hexNumber);
+	return address;
+}
+
+
+
+/*
+ * Returns the second operand of a LOAD/STORE instruction as a string.
+ * 
+ * The 'i' bit selects the second ALU operand for (integer) arithmetic and
+ * load/store instructions. If i = 0, the operand is r[rs2]. If i = 1, 
+ * the operand is 'simm13', sign-extended from 13 to 32 bits.
+ */
+char* Decode::getReg_Or_Imm(unsigned long rs2, unsigned long i, unsigned long simm13, int registerTypeIdentifier)
+{
+	char* address = (char*)malloc(30);
+	char* hexNumber = (char*)malloc(32);
+	
+        // Second operand is rs2.
+	if(i == 0) 
+	{
+                // Integer, Floating-point or Co-Processor register?
+		switch(registerTypeIdentifier)
+		{
+			case 1: strcpy(address, getIntegerRegisterName(rs2)); break;       // Integer register.
+			case 2: strcpy(address, getFloatingRegisterName(rs2)); break;      // Floating point register.
+			case 3: strcpy(address, getCoProcessorRegisterName(rs2)); break;   // Co-Processor register.
+		}
+	}
+        
+        // Second operand is simm13.
+	else
+	{
+		sprintf(hexNumber, "0x%lX", simm13);
+		strcpy(address, hexNumber);
+	}
+	free(hexNumber);
+	return address;
+}
+
+
 

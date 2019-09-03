@@ -1,6 +1,6 @@
 #include "other.h"
 // Returns a single bit at a specified position of a 32-bit bitStream
-int other::getBit(unsigned long bitStream, int position)
+int Other::getBit(unsigned long bitStream, int position)
 {
 	int bit;
 	bit = (bitStream & (1 << position)) >> position;
@@ -10,7 +10,7 @@ int other::getBit(unsigned long bitStream, int position)
 
 
 // Sets a single bit at a specified position of a 32-bit bitStream
-unsigned long other::setBit(unsigned long bitStream, int position)
+unsigned long Other::setBit(unsigned long bitStream, int position)
 {
 	unsigned long setBitStream = bitStream;
 	setBitStream |= 1 << position;
@@ -20,7 +20,7 @@ unsigned long other::setBit(unsigned long bitStream, int position)
 
 
 // Clears a single bit at a specified position of a 32-bit bitStream
-unsigned long other::clearBit(unsigned long bitStream, int position)
+unsigned long Other::clearBit(unsigned long bitStream, int position)
 {
 	unsigned long clearedBitStream = bitStream;
 	clearedBitStream &= ~(1 << position);
@@ -30,7 +30,7 @@ unsigned long other::clearBit(unsigned long bitStream, int position)
 
 
 // Toggles a single bit at a specified position of a 32-bit bitStream
-unsigned long other::toggleBit(unsigned long bitStream, int position)
+unsigned long Other::toggleBit(unsigned long bitStream, int position)
 {
 	unsigned long toggledBitStream = bitStream;
 	toggledBitStream ^= 1 << position;
@@ -40,7 +40,7 @@ unsigned long other::toggleBit(unsigned long bitStream, int position)
 
 
 // Returns a pointer to a string containing bytes within startPosition and endPosition extracted from 32-bit bitStream
-char* other::showBits(unsigned long bitStream, int startPosition, int endPosition)
+char* Other::showBits(unsigned long bitStream, int startPosition, int endPosition)
 {
 	// Allocate one extra byte for NULL character
 	char* bits = (char*)malloc(endPosition - startPosition + 2);
@@ -54,7 +54,7 @@ char* other::showBits(unsigned long bitStream, int startPosition, int endPositio
 
 
 
-void other::displayWord(char* cpuInstruction, int isInstruction)
+void Other::displayWord(char* cpuInstruction, int isInstruction)
 {
 	if(cpuInstruction != NULL)
 	{

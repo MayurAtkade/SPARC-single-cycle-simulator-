@@ -2,13 +2,14 @@
 #include "reader.h"
 #include "memory.h"
 #include "decode.h"
+#include "other.h"
 
 class Simulator{
     private:
         char* elfBinary;
-        static Reader *reader;
-        static Memory *memory;
-        static Decode *decode;
+        Reader *reader;
+        Memory *memory;
+        Decode *decode;
     public:
         Simulator(char*);
         void startSimulation();

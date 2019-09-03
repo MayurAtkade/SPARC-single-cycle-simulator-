@@ -6,9 +6,9 @@ Memory::Memory(){
     lastMemory=0;
 }
 
-void writeToMemory(unsigned long memoryAddress)
+void Memory::writeToMemory(unsigned long memoryAddress)
 {
-    this->memory[curMemory] = memoryAddress;
+    memory[curMemory] = memoryAddress;
     curMemory++;
 }
 void Memory::set_lastMemory(unsigned long l){
