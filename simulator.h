@@ -6,28 +6,13 @@
 class Simulator{
     private:
         char* elfBinary;
-        void resetSimulator();
-        Reader *r;
-        Memory *mem;
-        Decode *d;
+        static Reader *reader;
+        static Memory *memory;
+        static Decode *decode;
     public:
         Simulator(char*);
         void startSimulation();
 
 };
 
-
-/*
-void resetSimulator()
-{
-	sparcRegisters.psr.cwp = 0;
-	sparcRegisters.psr.c = 0;
-	sparcRegisters.psr.v = 0;
-	sparcRegisters.psr.z = 0;
-	sparcRegisters.psr.n = 0;
-	sparcRegisters.pc = 0;
-	sparcRegisters.npc = 4;
-        
-     //   setIUErrorMode(0);
-}*/
 

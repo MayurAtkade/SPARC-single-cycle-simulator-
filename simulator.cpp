@@ -2,23 +2,23 @@
 #include "other.h"
 
 Simulator::Simulator(char* f){
-    elfBinary=f;
-    r=new Reader();
-    mem=new Memory();
-    d=new Decode();
+    elfBinary = f;
+    reader = new Reader();
+    memory = new Memory();
+    decode = new Decode();
 }
 
 void Simulator::startSimulation(){
     struct loadedSections *elfSectionsPrevPtr, *elfSectionCurPtr;
-    other *o=new other();
-    elfSectionCurPtr = r->load_sparc_instructions(elfBinary);
+    Other *other = new Other();
+    elfSectionCurPtr = reader->load_sparc_instructions(this->elfBinary, this->memory);
     do
 	{
 		printf("Disassembly of Section: %s\n", elfSectionCurPtr->sectionName);
 		printf("Section Load Address: %lu\n", elfSectionCurPtr->sectionLoadAddress);
 		printf("Instruction Count: %lu\n",elfSectionCurPtr->instructionCount);
 		if(elfSectionCurPtr->sectionType == 1)
-            mem->set_lastMemory(elfSectionCurPtr->instructionCount*4);
+            memory->set_lastMemory(elfSectionCurPtr->instructionCount*4);
 		printf("Section Type: %u\n", elfSectionCurPtr->sectionType);
 		printf("Section Size: %lu\n",elfSectionCurPtr->sectionSize);
 
@@ -31,7 +31,7 @@ void Simulator::startSimulation(){
 	printf("\n");
 
 	int firstNumericParametre = 0;
-	int secondNumericParametre = mem->get_curMemory();
+	int secondNumericParametre = memory->get_curMemory();
 
 	/*// Initializing execution environment
 	setRegister("pc", firstNumericParametre);
@@ -43,21 +43,21 @@ void Simulator::startSimulation(){
 	
 	unsigned long instructionCount;
 
-	for(instructionCount = 0; instructionCount < mem->get_lastMemory; instructionCount++)
+	for(instructionCount = 0; instructionCount < memory->get_lastMemory(); instructionCount++)
 	{
 		char* cpuInstruction = NULL;
 		char* disassembledInstruction = NULL;
 		char* hexNumber = (char*)malloc(32);
-		cpuInstruction = mem->readWordAsString(firstNumericParametre);
+		cpuInstruction = memory->readWordAsString(firstNumericParametre);
 		int wrong_instruction = 0;
-		disassembledInstruction = (char*)d->decodeInstruction(cpuInstruction, firstNumericParametre);
+		disassembledInstruction = (char*)decode->decodeInstruction(cpuInstruction, firstNumericParametre);
         if(strcmp("-1",disassembledInstruction)==0) wrong_instruction=1;
 		if (wrong_instruction == 0)	
 		{	
 			printf("\n\t");
 			sprintf(hexNumber, "%lx", firstNumericParametre);
 			printf("0x%s:\t", hexNumber);
-			o->displayWord(cpuInstruction, 1);
+			other->displayWord(cpuInstruction, 1);
 			printf("\t%s", disassembledInstruction);
 		}		
 		firstNumericParametre += 4;

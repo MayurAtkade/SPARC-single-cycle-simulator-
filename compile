@@ -1,8 +1,11 @@
-g++ -c memory.c -o memory.o 
-g++ -c loader.c -o loader.o 
-g++ -c decode.c -o decode.o 
-gcc -c simulator.c -o simulator.o 
+g++ -c memory.cpp -o memory.o -I. -g -ggdb -O0
+g++ -c reader.cpp -o reader.o -I. -g -ggdb -O0
+g++ -c other.cpp -o other.o -I. -g -ggdb -O0
 
-gcc loader.o memory.o decode.o register.o simulator.o -o sim 
+g++ -c decode.cpp -o decode.o -I. -g -ggdb -O0
+#g++ -c register.cpp -o register.o -I. -g -ggdb -O0
+g++ -c simulator.cpp -o simulator.o -I. -g -ggdb -O0
+
+g++ main.cpp reader.o memory.o decode.o other.o simulator.o -o SparcSimulator -lelf -lm -g -ggdb -O0
 
 rm -f *.o

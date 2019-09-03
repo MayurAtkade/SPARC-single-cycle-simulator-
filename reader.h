@@ -1,4 +1,5 @@
 #include "header.h"
+#include "memory.h"
 
 struct loadedSections
 {
@@ -11,8 +12,9 @@ struct loadedSections
 };
 
 class Reader{
+    private:
     public:
         int initializeLoader(char *elfBinary);
-        struct loadedSections* load_sparc_instructions(char *elfBinary);
+        struct loadedSections* load_sparc_instructions(char *elfBinary, Memory* memory);
 
 };

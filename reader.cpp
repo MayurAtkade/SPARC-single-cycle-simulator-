@@ -20,7 +20,7 @@ int Reader::initializeLoader(char *elfBinary){
 
 
 
-struct loadedSections* Reader::load_sparc_instructions(char *elfBinary)
+struct loadedSections* Reader::load_sparc_instructions(char *elfBinary, Memory *memory)
 {
 	GElf_Ehdr elf_header;		    // ELF header
 	GElf_Shdr shdr;                 // Section Header
@@ -81,10 +81,10 @@ struct loadedSections* Reader::load_sparc_instructions(char *elfBinary)
 					break;
 				while (sectionDataBuffer < (char*)sectionData-> d_buf + sectionData -> d_size )
 				{
-					memory[curMemory++] = *sectionDataBuffer; sectionLoadAddress++; sectionDataBuffer++;
-					memory[curMemory++] = *sectionDataBuffer; sectionLoadAddress++; sectionDataBuffer++;
-					memory[curMemory++] = *sectionDataBuffer; sectionLoadAddress++; sectionDataBuffer++;
-					memory[curMemory++] = *sectionDataBuffer; sectionLoadAddress++; sectionDataBuffer++;
+					memory.writeToMemory(*sectionDataBuffer); sectionLoadAddress++; sectionDataBuffer++;
+					memory.writeToMemory(*sectionDataBuffer); sectionLoadAddress++; sectionDataBuffer++;
+					memory.writeToMemory(*sectionDataBuffer); sectionLoadAddress++; sectionDataBuffer++;
+					memory.writeToMemory(*sectionDataBuffer); sectionLoadAddress++; sectionDataBuffer++;
 
 					sectionDataByteCounter += 4;
 					instructionCount++;
