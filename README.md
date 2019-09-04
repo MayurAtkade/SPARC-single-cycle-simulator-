@@ -1,3 +1,1 @@
-# SPARC-single-cycle-simulator-
-
-A single cycle sparc emulator.
+# SPARC v8 Emulator
