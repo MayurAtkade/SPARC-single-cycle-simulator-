@@ -15,6 +15,11 @@ class Memory{
         void set_curMemory(unsigned long);
         unsigned long get_curMemory();
         char* readWordAsString(unsigned long memoryAddress);
+        int writeByte(unsigned long memoryAddress, char byte);
+        char readByte(unsigned long memoryAddress);
+        unsigned long readWord(unsigned long memoryAddress);
+        int writeWord(unsigned long memoryAddress, unsigned long word);
+        int writeHalfWord(unsigned long memoryAddress, unsigned short halfWord);
 };
 
 #endif

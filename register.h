@@ -1,6 +1,22 @@
+#ifndef REGISTER_H
+#define REGISTER_H
+
 #include "header.h"
 #include "constants.h"
-struct processor_status_register
+#include "other.h"
+#include "psr.h"
+#include "fsr.h"
+
+
+#define SIZEOF_INTEGER_REGISTER  	 	 4
+#define SIZEOF_WIM_REGISTER     		 4
+#define REGISTER_WINDOW_WIDTH    		16
+#define GLOBAL_REGISTERS       		 	 8
+#define REGISTER_WINDOWS       		 	 8
+
+
+
+/*struct processor_status_register
 {
 	unsigned int cwp:5;
 	unsigned int et:1;
@@ -38,7 +54,7 @@ struct floating_point_state_register
 	unsigned int rd:2;
 }__attribute__ ((__packed__));
 
-
+*/
 
 struct registers
 {
@@ -57,13 +73,13 @@ struct registers
         http://blog.jgc.org/2007/04/debugging-solaris-bus-error-caused-by.html
         https://groups.google.com/forum/?fromgroups=#!topic/comp.unix.solaris/8SgFiMudGL4 */
        
-       struct processor_status_register __attribute__ ((aligned (8))) psr;
-       struct floating_point_state_register __attribute__ ((aligned (8))) fsr;
+       class processor_status_register __attribute__ ((aligned (8))) psr;
+       class floating_point_state_register __attribute__ ((aligned (8))) fsr;
 }__attribute__ ((__packed__));
 
 class Register{
     public:
-        struct registers sparcRegisters;
+        struct registers SRegisters;
         void initializeRegisters();
         char* displayRegister(unsigned long registerValue);
         unsigned short getRegisterWindow();
@@ -71,17 +87,25 @@ class Register{
         unsigned long* getWindowPointer(int direction);
         unsigned long getRegister(char* sparcRegister);
         int setRegister(char* sparcRegister, unsigned long registerValue);
-        unsigned long getPSR();
-        void setPSR(unsigned long psrValue);
+        processor_status_register getPSR();
+        void setPSR(processor_status_register psrValue);
+        floating_point_state_register getFSR();
+        void setFSR(floating_point_state_register fsrValue);
         unsigned long getTBR();
         void setTBR(unsigned long tbrValue);
         int saveRegisters();
         int restoreRegisters();
         void nextWindow();
-        unsigned long castPSRToUnsignedLong(struct processor_status_register psr);
-        struct processor_status_register castUnsignedLongToPSR(unsigned long registerValue);
-        struct floating_point_state_register castUnsignedLongToFSR(unsigned long registerValue);
-        unsigned long castFSRToUnsignedLong(struct floating_point_state_register fsr);
+        unsigned long castPSRToUnsignedLong(processor_status_register psr);
+        processor_status_register castUnsignedLongToPSR(unsigned long registerValue);
+        floating_point_state_register castUnsignedLongToFSR(unsigned long registerValue);
+        unsigned long castFSRToUnsignedLong(floating_point_state_register fsr);
         char* getNextRegister(char* sparcRegister);
+        char* getAddress(unsigned long rs1, unsigned long rs2, unsigned long i, unsigned long simm13, int registerTypeIdentifier);
+        char* getReg_Or_Imm(unsigned long rs2, unsigned long i, unsigned long simm13, int registerTypeIdentifier);
+        char* getIntegerRegisterName(unsigned long registerIdentifier);
+        char* getFloatingRegisterName(unsigned long registerIdentifier);
+        char* getCoProcessorRegisterName(unsigned long registerIdentifier);
 
 };
+#endif

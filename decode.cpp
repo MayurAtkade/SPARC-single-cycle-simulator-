@@ -1,4 +1,5 @@
 #include "decode.h"
+
 char* Decode::decodeInstruction(char* cpuInstruction, unsigned long regPC)
 {
 	char* disassembledInstruction = (char*)malloc(50);
@@ -171,7 +172,8 @@ char* Decode::decodeInstruction(char* cpuInstruction, unsigned long regPC)
     else
     {
         rd = (instructionWord & 0x3E000000) >> 25;
-        op3 = (instructionWord & 0x01F80000) >> 19; sparc_instruction_fields.op3 = op3;
+        op3 = (instructionWord & 0x01F80000) >> 19; 
+        sparc_instruction_fields.op3 = op3;
         rs1 = (instructionWord & 0x00007C000) >> 14;
         i = (instructionWord & 0x00002000) >> 13;
         simm13 = (instructionWord & 0x00001FFF);

@@ -5,6 +5,8 @@ Simulator::Simulator(char* f){
     reader = new Reader();
     memory = new Memory();
     decode = new Decode();
+    execute = new Execute();
+    sregister = new Register();
 }
 
 void Simulator::startSimulation(){
@@ -29,17 +31,18 @@ void Simulator::startSimulation(){
 	while(elfSectionCurPtr != NULL);
 	printf("\n");
 
-	int firstNumericParametre = 0;
-	int secondNumericParametre = memory->get_curMemory();
+	int memory_point = 0;
+	int last_memory_point = memory->get_curMemory();
 
-	/*// Initializing execution environment
-	setRegister("pc", firstNumericParametre);
-	setRegister("npc", firstNumericParametre + 4);
-	setRegister("i6", 0x40400000);
-	setRegister("o6", 0x403FFE80);
-	setRegister("wim", 0x0000002);
-	setRegister("psr", 0xF30010E0);*/
-	
+	// Initializing execution environment
+	/*
+	sregister->setRegister("pc", memory_point);
+	sregister->setRegister("npc", memory_point + 4);
+	sregister->setRegister("i6", 0x40400000);
+	sregister->setRegister("o6", 0x403FFE80);
+	sregister->setRegister("wim", 0x0000002);
+	sregister->setRegister("psr", 0xF30010E0);
+	*/
 	unsigned long instructionCount;
 
 	for(instructionCount = 0; instructionCount < memory->get_lastMemory(); instructionCount++)
@@ -47,19 +50,20 @@ void Simulator::startSimulation(){
 		char* cpuInstruction = NULL;
 		char* disassembledInstruction = NULL;
 		char* hexNumber = (char*)malloc(32);
-		cpuInstruction = memory->readWordAsString(firstNumericParametre);
+		cpuInstruction = memory->readWordAsString(memory_point);
 		int wrong_instruction = 0;
-		disassembledInstruction = (char*)decode->decodeInstruction(cpuInstruction, firstNumericParametre);
+		disassembledInstruction = (char*)decode->decodeInstruction(cpuInstruction, memory_point);
         if(strcmp("-1",disassembledInstruction)==0) wrong_instruction=1;
 		if (wrong_instruction == 0)	
 		{	
 			printf("\n\t");
-			sprintf(hexNumber, "%lx", firstNumericParametre);
+			sprintf(hexNumber, "%lx", memory_point);
 			printf("0x%s:\t", hexNumber);
 			other->displayWord(cpuInstruction, 1);
 			printf("\t%s", disassembledInstruction);
-		}		
-		firstNumericParametre += 4;
+		}
+		execute->executeInstruction(disassembledInstruction, memory, sregister);                        // Added		
+		memory_point += 4;
 		free(cpuInstruction);
 		free(disassembledInstruction);
 		free(hexNumber);
