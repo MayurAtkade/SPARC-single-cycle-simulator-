@@ -1,3 +1,6 @@
+#ifndef DECODE_H
+#define DECODE_H
+
 #include "header.h"
 #include "memory.h"
 
@@ -9,7 +12,7 @@ class Decode{
     private:
     public:
         char* decodeInstruction(char* cpuInstruction, unsigned long regPC);
-	struct instruction_fields sparc_instruction_fields;
+	    struct instruction_fields sparc_instruction_fields;
         char* getIntegerRegisterName(unsigned long registerIdentifier);
         char* getFloatingRegisterName(unsigned long registerIdentifier);
         char* getCoProcessorRegisterName(unsigned long registerIdentifier);
@@ -17,3 +20,5 @@ class Decode{
         char* getReg_Or_Imm(unsigned long rs2, unsigned long i, unsigned long simm13, int registerTypeIdentifier);
 
 };
+
+#endif
